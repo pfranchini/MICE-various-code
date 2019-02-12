@@ -1,9 +1,9 @@
 CC = g++
 CFLAGS = -DDEBUG -ggdb -Wall
 
-all : spacepoints
+all: ckov
 
-spacepoints : ckov.c
+ckov: ckov.c
 	$(CC) $(CFLAGS) ckov.c -o ckov \
 	                      -I${MAUS_ROOT_DIR}/ \
 	                      -I${MAUS_ROOT_DIR}/src/common_cpp \
@@ -17,6 +17,5 @@ spacepoints : ckov.c
 	                      -Wl,--no-as-needed \
 			      -fdiagnostics-color \
 			      -Wno-error
-clean:
-	rm ckov
+clean:	rm ckov
 

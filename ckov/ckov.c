@@ -1,12 +1,14 @@
 
-//////////////////
+////////////////////////////////////////////////////////////////////
 //
 //  Ckovs:
 //   - NPEs vs P
-//   - PE spectra
+//   - PE spectra above and below thresold
 //
-//////////////////
-
+//  p.franchini@imperial.ac.uk 
+//  https://github.com/pfranchini/MICE-various-code
+// 
+////////////////////////////////////////////////////////////////////
 
 #include <iostream>
 #include <string>
@@ -35,6 +37,10 @@ TH1D* pe_muon_a = new TH1D("pe_muon_a","PE spectra - CkovA", 30, 0, 30);
 TH1D* pe_pion_a = new TH1D("pe_pion_a","PE spectra - CkovA", 30, 0, 30);
 TH1D* pe_muon_b = new TH1D("pe_muon_b","PE spectra - CkovB", 30, 0, 30);
 TH1D* pe_pion_b = new TH1D("pe_pion_b","PE spectra - CkovB", 30, 0, 30);
+TH1D* pe_muon_a_under = new TH1D("pe_muon_a_under","PE spectra - CkovA", 30, 0, 30);
+TH1D* pe_pion_a_under = new TH1D("pe_pion_a_under","PE spectra - CkovA", 30, 0, 30);
+TH1D* pe_muon_b_under = new TH1D("pe_muon_b_under","PE spectra - CkovB", 30, 0, 30);
+TH1D* pe_pion_b_under = new TH1D("pe_pion_b_under","PE spectra - CkovB", 30, 0, 30);
 TH1D* pe_electron = new TH1D("pe_electron","PE for electrons", 100, 0, 50);
 TH2D* activation_muon_a = new TH2D("activation_muon_a", "NPE vs P CkovA", 100, 0, maxP, 100, 0, maxNPE);
 TH2D* activation_muon_b = new TH2D("activation_muon_b", "NPE vs P CkovB", 100, 0, maxP, 100, 0, maxNPE);
@@ -77,7 +83,7 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
   irstream infile(filename.c_str(), "Spill");
 
   Int_t NPEA, NPEB;
-  Double_t dt01, m, P2;
+  Double_t dt01, m, P;
   Int_t nspill = 0;
   Double_t m_muon = 105.6583745; // MeV/c2
   Double_t m_pion = 139.57018; // MeV/c2
@@ -134,8 +140,9 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
       //        trackpoints = scifi_tracks[k]->scifitrackpoints();  
 	
       //        for (unsigned int l = 0; l < trackpoints.size(); ++l) {
-          // TKU - Station 5                                                                                                                                               
+      // TKU - Station 5    
       //          if (trackpoints[l]->tracker()==0 && trackpoints[l]->station()==5){
+      
       m = 0;
       NPEA = 0;
       NPEB = 0;
@@ -152,8 +159,8 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
 	continue;
       
       tof->Fill(dt01);
-      // P1 = sqrt(pow(trackpoints[l]->mom()[0],2)+pow(trackpoints[l]->mom()[1],2)+pow(trackpoints[l]->mom()[2],2));	    
-      P2 = (m*(tof1-tof0)/c)/sqrt( pow(dt01*1e-9,2) - pow((tof1-tof0)/c,2) );
+      // P = sqrt(pow(trackpoints[l]->mom()[0],2)+pow(trackpoints[l]->mom()[1],2)+pow(trackpoints[l]->mom()[2],2));	  // P from trackers
+      P = (m*(tof1-tof0)/c)/sqrt( pow(dt01*1e-9,2) - pow((tof1-tof0)/c,2) );                                              // P from TOF01
       
       NPEA = ckovA.GetNumberOfPes();
       NPEB = ckovB.GetNumberOfPes();
@@ -166,24 +173,32 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
       // if (NPEA<=2) continue;
       
       if (m==m_muon) {
-	if (P2>2.67610e+02+50) pe_muon_a->Fill(NPEA);//
-	if (P2>2.21751e+02+50) pe_muon_b->Fill(NPEB);
-	activation_muon_a->Fill(P2,NPEA);
-	activation_muon_b->Fill(P2,NPEB);
-	muons->Fill(P2);
+	// PEs above the thresold
+	if (P>2.67610e+02+50) pe_muon_a->Fill(NPEA);//
+	if (P>2.21751e+02+50) pe_muon_b->Fill(NPEB);
+	// PEs under the thresold
+	if (P<2.67610e+02) pe_muon_a_under->Fill(NPEA);//
+	if (P<2.21751e+02) pe_muon_b_under->Fill(NPEB);
+	activation_muon_a->Fill(P,NPEA);
+	activation_muon_b->Fill(P,NPEB);
+	muons->Fill(P);
       }
       if (m==m_pion) {
-	if (P2>3.32162e+02+50) pe_pion_a->Fill(NPEA);//
-	if (P2>2.93303e+02+50) pe_pion_b->Fill(NPEB);
-	activation_pion_a->Fill(P2,NPEA);
-	activation_pion_b->Fill(P2,NPEB);
-	pions->Fill(P2);
+	// PEs above the thresold 
+	if (P>3.32162e+02+50) pe_pion_a->Fill(NPEA);//
+	if (P>2.93303e+02+50) pe_pion_b->Fill(NPEB);
+	// PEs under the thresold
+	if (P<3.32162e+02) pe_pion_a_under->Fill(NPEA);//
+	if (P<2.93303e+02) pe_pion_b_under->Fill(NPEB);
+	activation_pion_a->Fill(P,NPEA);
+	activation_pion_b->Fill(P,NPEB);
+	pions->Fill(P);
       }
       if (m==m_electron) {
 	pe_electron->Fill(NPEB);
 	activation_electron_a->Fill(dt01,NPEA);
 	activation_electron_b->Fill(dt01,NPEB);
-	// std::cout << m << " dt: " << dt01 << " " << "P: " << P2 << " - NPEs: " << NPEA << ", " << NPEB << std::endl;	      
+	// std::cout << m << " dt: " << dt01 << " " << "P: " << P << " - NPEs: " << NPEA << ", " << NPEB << std::endl;	      
       }
     }
   }
@@ -278,11 +293,11 @@ int main(){
   func_pion_a->SetParLimits(0,0,2);
   func_pion_a->SetParLimits(1,2,10);
   func_pion_a->SetParLimits(2,300,350);
-  TF1 *func_pion_b=new TF1("func_pion_b","[0] + [1]*(1-([2]/x)^2)",240.,500.);
-  func_pion_b->SetParameters(1.10,18,285);
+  TF1 *func_pion_b=new TF1("func_pion_b","[0] + [1]*(1-([2]/x)^2)",330.,500.);
+  func_pion_b->SetParameters(1.10,18,340);
   func_pion_b->SetParLimits(0,0,2);
   func_pion_b->SetParLimits(1,9,16);
-  func_pion_b->SetParLimits(2,250,300);
+  func_pion_b->SetParLimits(2,330,350);
 
   //  c1->cd(1);
   //  activation_muon_a->Draw("colz");
@@ -384,27 +399,51 @@ int main(){
   gPad->SetLogy();
   pe_muon_a->GetXaxis()->SetTitle("NPE");
   pe_pion_a->GetXaxis()->SetTitle("NPE");
+  pe_pion_a_under->GetXaxis()->SetTitle("NPE");
+  pe_pion_a_under->GetXaxis()->SetTitle("NPE");
   pe_muon_a->SetNormFactor();
   pe_pion_a->SetNormFactor();
+  pe_muon_a_under->SetNormFactor();
+  pe_pion_a_under->SetNormFactor();
   pe_muon_a->SetLineColor(kGreen);
   pe_pion_a->SetLineColor(kBlue);
-  pe_muon_a->SetLineWidth(4);
-  pe_pion_a->SetLineWidth(4);
+  pe_muon_a_under->SetLineColor(kGreen);
+  pe_pion_a_under->SetLineColor(kBlue);
+  pe_muon_a->SetLineWidth(3);
+  pe_pion_a->SetLineWidth(3);
+  pe_muon_a_under->SetLineWidth(3);
+  pe_pion_a_under->SetLineWidth(3);
+  pe_muon_a_under->SetLineStyle(9);
+  pe_pion_a_under->SetLineStyle(9);
   pe_muon_a->Draw();
   pe_pion_a->Draw("sames");
+  pe_muon_a_under->Draw("sames");
+  pe_pion_a_under->Draw("sames");
 
   c3->cd(2);
   gPad->SetLogy();
   pe_muon_b->GetXaxis()->SetTitle("NPE");
   pe_pion_b->GetXaxis()->SetTitle("NPE");
+  pe_muon_b_under->GetXaxis()->SetTitle("NPE");
+  pe_pion_b_under->GetXaxis()->SetTitle("NPE");
   pe_muon_b->SetNormFactor();
   pe_pion_b->SetNormFactor();
+  pe_muon_b_under->SetNormFactor();
+  pe_pion_b_under->SetNormFactor();
   pe_muon_b->SetLineColor(kGreen);
   pe_pion_b->SetLineColor(kBlue);
-  pe_muon_b->SetLineWidth(4);
-  pe_pion_b->SetLineWidth(4);
+  pe_muon_b_under->SetLineColor(kGreen);
+  pe_pion_b_under->SetLineColor(kBlue);
+  pe_muon_b->SetLineWidth(3);
+  pe_pion_b->SetLineWidth(3);
+  pe_muon_b_under->SetLineWidth(3);
+  pe_pion_b_under->SetLineWidth(3);
+  pe_muon_b_under->SetLineStyle(9);
+  pe_pion_b_under->SetLineStyle(9);
   pe_muon_b->Draw();
   pe_pion_b->Draw("sames");
+  pe_muon_b_under->Draw("sames");
+  pe_pion_b_under->Draw("sames");
 
   c3->SaveAs("npe.png");
   c3->SaveAs("Ckov_photoelectrons_spectra.pdf");
@@ -423,6 +462,8 @@ int main(){
   pe_pion_a->Write();
   pe_muon_b->Write();
   pe_pion_b->Write();
+  pe_muon_b_under->Write();
+  pe_pion_b_under->Write();
   muons->Write();
   pions->Write();
   output->Write();

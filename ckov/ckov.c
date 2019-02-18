@@ -29,9 +29,14 @@
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 #include "src/common_cpp/DataStructure/ThreeVector.hh"
 
-Int_t spills=5000;
-Int_t maxP = 500;
-Int_t maxNPE = 25;
+////////////////////////////////////////////////////////////////////////
+
+Int_t spills=5000;        // max number of spills processed per run
+Int_t maxP = 500;         // max momentum in the activation plots (x)
+Int_t maxNPE = 25;        // max NPEd in the activation plots (y)
+Int_t nbins = 50;         // number of bins in the activation plots
+
+////////////////////////////////////////////////////////////////////////
 
 TH1D* pe_muon_a = new TH1D("pe_muon_a","PE spectra - CkovA", 30, 0, 30);
 TH1D* pe_pion_a = new TH1D("pe_pion_a","PE spectra - CkovA", 30, 0, 30);
@@ -42,15 +47,15 @@ TH1D* pe_pion_a_under = new TH1D("pe_pion_a_under","PE spectra - CkovA", 30, 0, 
 TH1D* pe_muon_b_under = new TH1D("pe_muon_b_under","PE spectra - CkovB", 30, 0, 30);
 TH1D* pe_pion_b_under = new TH1D("pe_pion_b_under","PE spectra - CkovB", 30, 0, 30);
 TH1D* pe_electron = new TH1D("pe_electron","PE for electrons", 100, 0, 50);
-TH2D* activation_muon_a = new TH2D("activation_muon_a", "NPE vs P CkovA", 100, 0, maxP, 100, 0, maxNPE);
-TH2D* activation_muon_b = new TH2D("activation_muon_b", "NPE vs P CkovB", 100, 0, maxP, 100, 0, maxNPE);
-TH2D* activation_pion_a = new TH2D("activation_pion_a", "NPE vs P CkovA", 100, 0, maxP, 100, 0, maxNPE);
-TH2D* activation_pion_b = new TH2D("activation_pion_b", "NPE vs P CkovB", 100, 0, maxP, 100, 0, maxNPE);
-TH2D* activation_electron_a = new TH2D("activation_electron_a", "NPE vs P CkovA", 100, 24, 26, 100, 0, maxNPE);
-TH2D* activation_electron_b = new TH2D("activation_electron_b", "NPE vs P CkovB", 100, 24, 26, 100, 0, maxNPE);
+TH2D* activation_muon_a = new TH2D("activation_muon_a", "NPE vs P CkovA", nbins, 0, maxP, 100, 0, maxNPE);
+TH2D* activation_muon_b = new TH2D("activation_muon_b", "NPE vs P CkovB", nbins, 0, maxP, 100, 0, maxNPE);
+TH2D* activation_pion_a = new TH2D("activation_pion_a", "NPE vs P CkovA", nbins, 0, maxP, 100, 0, maxNPE);
+TH2D* activation_pion_b = new TH2D("activation_pion_b", "NPE vs P CkovB", nbins, 0, maxP, 100, 0, maxNPE);
+TH2D* activation_electron_a = new TH2D("activation_electron_a", "NPE vs P CkovA", nbins, 24, 26, 100, 0, maxNPE);
+TH2D* activation_electron_b = new TH2D("activation_electron_b", "NPE vs P CkovB", nbins, 24, 26, 100, 0, maxNPE);
 
-TH1D* muons = new TH1D("muons","muons spectrum", 100, 0, maxP);
-TH1D* pions = new TH1D("pions","pions spectrum", 100, 0, maxP);
+TH1D* muons = new TH1D("muons","muons spectrum", nbins, 0, maxP);
+TH1D* pions = new TH1D("pions","pions spectrum", nbins, 0, maxP);
 
 TH2D* tof0_slabs = new TH2D("tof0_slabs", "TOF0", 10, 0, 9, 10, 0, 9);
 
@@ -60,6 +65,8 @@ TCanvas *c3 = new TCanvas("c3","PEs",1400,600);
 TCanvas *c4 = new TCanvas("c4","muons and pions",1400,1200);
 
 void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t fieldon ) {
+  // t_min: lower bound for muons
+  // t_cut: upper bound for muons (lower bound for pions)
 
   MAUS::Data data;
   MAUS::Spill* spill;
@@ -89,8 +96,8 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
   Double_t m_pion = 139.57018; // MeV/c2
   Double_t m_electron = 0.5109989461; // MeV/c2
   Double_t c = 299792458; // m/s
-  Double_t tof0 = 5287.24720607/1000.;  // as in the gdml file in meters                                                                                                 
-  Double_t tof1 = 12929.5636425/1000.;  // as in the gdml file in meters  
+  Double_t tof0 = 5287.24720607/1000.;  // as in the gdml file [meters]                                                                           
+  Double_t tof1 = 12929.5636425/1000.;  // as in the gdml file [meters]
 
   TH1D* tof = new TH1D("tof","TOF01 [ns]", 200, 22, 38);
   
@@ -123,7 +130,7 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
       tof0_space_points = tof_space_points.GetTOF0SpacePointArray()[0];
       tof1_space_points = tof_space_points.GetTOF1SpacePointArray()[0];
       
-      // tof01                                                                                                                                                             
+      // tof01                                                                                                                                       
       dt01 = tof1_space_points.GetTime()-tof0_space_points.GetTime();
 
       //// Tracker
@@ -147,8 +154,8 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
       NPEA = 0;
       NPEB = 0;
 
+      // Tight species selection
       Double_t dt = 0.05;
-      
       if (dt01>t_cut+dt*2)  // pions
 	m=m_pion;
       else if ( (dt01>t_min+dt) && (dt01<t_cut-dt) )  // muons
@@ -164,8 +171,10 @@ void process_run( std::string filename, Double_t t_min, Double_t t_cut, Float_t 
       
       NPEA = ckovA.GetNumberOfPes();
       NPEB = ckovB.GetNumberOfPes();
+      // CUT: CkovA should have more PE than CkovB
       if (NPEA>NPEB) continue;
       
+      // CUT: only central pixels in TOF0 and TOF1 in order to have co-axial tracks
       if (tof0_space_points.GetSlabx()<4 || tof0_space_points.GetSlabx()>5 || tof0_space_points.GetSlaby()<4 || tof0_space_points.GetSlaby()>5 ) continue;
       if (tof1_space_points.GetSlabx()!=3 || tof1_space_points.GetSlaby()!=3) continue;
       tof0_slabs->Fill(tof0_space_points.GetSlabx(),tof0_space_points.GetSlaby());
@@ -244,12 +253,12 @@ int main(){
   // 400 MeV/c
   process_run("files/10519_recon.root", 25.5, 26.4, 1);
 
-  TH1D* activation_muon_histo_a = new TH1D("activation_muon_histo_a", "Muons: NPE vs P - CkovA", 100, 0, maxP);
-  TH1D* activation_muon_histo_b = new TH1D("activation_muon_histo_b", "Muons: NPE vs P - CkovB", 100, 0, maxP);
-  TH1D* activation_pion_histo_a = new TH1D("activation_pion_histo_a", "Pions: NPE vs P - CkovA", 100, 0, maxP);
-  TH1D* activation_pion_histo_b = new TH1D("activation_pion_histo_b", "Pions: NPE vs P - CkovB", 100, 0, maxP);
-  TH1D* activation_electron_histo_a = new TH1D("activation_electron_histo_a", "Electrons: NPE vs P - CkovA", 100, 24, 26);
-  TH1D* activation_electron_histo_b = new TH1D("activation_electron_histo_b", "Electrons: NPE vs P - CkovB", 100, 24, 26);
+  TH1D* activation_muon_histo_a = new TH1D("activation_muon_histo_a", "Muons: NPE vs P - CkovA", nbins, 0, maxP);
+  TH1D* activation_muon_histo_b = new TH1D("activation_muon_histo_b", "Muons: NPE vs P - CkovB", nbins, 0, maxP);
+  TH1D* activation_pion_histo_a = new TH1D("activation_pion_histo_a", "Pions: NPE vs P - CkovA", nbins, 0, maxP);
+  TH1D* activation_pion_histo_b = new TH1D("activation_pion_histo_b", "Pions: NPE vs P - CkovB", nbins, 0, maxP);
+  TH1D* activation_electron_histo_a = new TH1D("activation_electron_histo_a", "Electrons: NPE vs P - CkovA", nbins, 24, 26);
+  TH1D* activation_electron_histo_b = new TH1D("activation_electron_histo_b", "Electrons: NPE vs P - CkovB", nbins, 24, 26);
   //  TGraph* graph = new TGraph(activation_muon_a->GetNbinsX());
   //  graph->SetMaximum(maxNPE);
   //  graph->SetTitle("Activation plot muon");
@@ -413,8 +422,8 @@ int main(){
   pe_pion_a->SetLineWidth(3);
   pe_muon_a_under->SetLineWidth(3);
   pe_pion_a_under->SetLineWidth(3);
-  pe_muon_a_under->SetLineStyle(9);
-  pe_pion_a_under->SetLineStyle(9);
+  pe_muon_a_under->SetLineStyle(7);
+  pe_pion_a_under->SetLineStyle(7);
   pe_muon_a->Draw();
   pe_pion_a->Draw("sames");
   pe_muon_a_under->Draw("sames");
@@ -438,8 +447,8 @@ int main(){
   pe_pion_b->SetLineWidth(3);
   pe_muon_b_under->SetLineWidth(3);
   pe_pion_b_under->SetLineWidth(3);
-  pe_muon_b_under->SetLineStyle(9);
-  pe_pion_b_under->SetLineStyle(9);
+  pe_muon_b_under->SetLineStyle(7);
+  pe_pion_b_under->SetLineStyle(7);
   pe_muon_b->Draw();
   pe_pion_b->Draw("sames");
   pe_muon_b_under->Draw("sames");

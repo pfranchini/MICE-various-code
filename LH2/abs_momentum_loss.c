@@ -1,0 +1,130 @@
+// Momentum loss in the absorber P(TKU1) - P(TKD1)
+
+// TOF cut
+// 40 MeV/c cut
+
+{
+  // Load the MAUS data structure
+  maus_root_dir = TString(gSystem->Getenv("MAUS_ROOT_DIR"));
+  gSystem->Load(maus_root_dir + "/build/libMausCpp.so"); // Load the MAUS datastructure
+
+  // Set up the ROOT file and data pointer
+  TFile f1("run_recon.root"); // Load the MAUS output file
+  TTree *T = f1.Get("Spill");   // Pull out the TTree
+  MAUS::Data *data_ptr; // A variable to store the Data from each spill
+  T->SetBranchAddress("data", &data_ptr);  // Set the address of data_ptr
+
+  // Create the histogram
+  TH1D* deltaP = new TH1D("deltaP", "delta P", 100, 0., 50.);
+
+  int station1, station2, station3, station4, station5, station6;
+  double p_tku1, p_tkd1, dt01;
+  double momentum = 140.0;
+  unsigned int k, l;
+
+  MAUS::Spill* spill;
+  std::vector<MAUS::ReconEvent*>* revts ;
+  MAUS::SciFiEvent* sfevt;
+  
+  MAUS::TOFEvent* tof_event;
+  MAUS::TOFEventSpacePoint space_points;
+  MAUS::TOFSpacePoint tof0_space_points, tof1_space_points;
+  
+  std::vector<MAUS::SciFiTrack*> track;
+  std::vector<MAUS::SciFiTrackPoint*> trackpoints;
+
+  // Loop over all spills
+  for (size_t i = 0; i < T->GetEntries(); ++i) {
+    //for (size_t i = 0; i < 1000; ++i) {
+    T->GetEntry(i);  // Update the spill pointed to by data_ptr
+    spill = data_ptr->GetSpill();  
+    if (spill == NULL || !(spill->GetDaqEventType() == "physics_event")) continue;
+    if ( spill->GetSpillNumber() % 100 == 0 )
+      std::cout << "Spill: " << spill->GetSpillNumber() << "\n";
+    revts = spill->GetReconEvents();
+    
+    // Loop over recon events in spill
+    for ( size_t j = 0; j < revts->size(); ++j ) {
+      if ( !revts->at(j) ) continue;
+      sfevt = revts->at(j)->GetSciFiEvent(); // Pull out scifi event
+      track = sfevt->scifitracks(); // Pull out tracks
+ 
+      tof_event = revts->at(j)->GetTOFEvent(); // Pull out TOF event                                                                       
+      space_points = tof_event->GetTOFEventSpacePoint();  // Pull out space points                                                 
+
+      // CUT: select reco events with only one space point in TOF0 and one in TOF1                                                                         
+      if (space_points.GetTOF0SpacePointArray().size() != 1) continue;
+      if (space_points.GetTOF1SpacePointArray().size() != 1) continue;
+
+      tof0_space_points = space_points.GetTOF0SpacePointArray()[0];
+      tof1_space_points = space_points.GetTOF1SpacePointArray()[0];
+
+      dt01 = tof1_space_points.GetTime()-tof0_space_points.GetTime();
+      
+      if ( (dt01<29) || (dt01>32) ) continue; 
+      
+      // CUT: only tracks in both TKU and TKD                                                                                                                                                                                               
+      if (track.size()!=2) continue;
+
+      // Loop over _tracks_ in each event          
+      for (unsigned int k = 0; k < track.size(); ++k) {
+	
+	trackpoints = track[k]->scifitrackpoints();
+	
+	if (trackpoints->size()!=0) {
+
+	  // Loop over track points in each track 
+	  for (l = 0; l < trackpoints->size(); ++l) {
+
+	    //cout << "Tracker: " << trackpoints[l]->tracker() << " - Station: " << trackpoints[l]->station() << endl;
+	    // Cut on Pz at TKU5                                                                                                                           
+	    if (trackpoints[l]->tracker()==0 && trackpoints[l]->station()==5) 
+	      if ( trackpoints[l]->mom()[2]>120) 
+		if (trackpoints[l]->mom()[2]<160) 
+		  station5=1;
+	    
+	    //	    cout << "Mom: " << trackpoints[l]->mom()[2] << endl;	      
+	    if ((trackpoints[l]->tracker()==0) && (trackpoints[l]->station()==1)) {
+	      p_tku1 = sqrt(pow(trackpoints[l]->mom()[0],2)+pow(trackpoints[l]->mom()[1],2)+pow(trackpoints[l]->mom()[2],2));
+	    }
+	    
+	    if ((trackpoints[l]->tracker()==1) && (trackpoints[l]->station()==1)) {
+	      p_tkd1 = sqrt(pow(trackpoints[l]->mom()[0],2)+pow(trackpoints[l]->mom()[1],2)+pow(trackpoints[l]->mom()[2],2));
+	    }
+	    
+	    if (trackpoints[l]->tracker()==0 && trackpoints[l]->station()==1) station1=1;
+	    if (trackpoints[l]->tracker()==0 && trackpoints[l]->station()==2) station2=1;
+	    if (trackpoints[l]->tracker()==0 && trackpoints[l]->station()==3) station3=1;
+	    if (trackpoints[l]->tracker()==0 && trackpoints[l]->station()==4) station4=1;
+	    if (trackpoints[l]->tracker()==1 && trackpoints[l]->station()==1) station6=1;
+	    
+	    
+	  }
+	}
+      }
+    }
+    
+    if (station1*station2*station3*station4*station5*station6 == 1){
+      //      cout << p_tku1 - p_tkd1 << endl;
+      deltaP->Fill(p_tku1-p_tkd1);
+    }
+    
+    station1=0;
+    station2=0;
+    station3=0;
+    station4=0;
+    station5=0;
+    station6=0;
+    
+  }
+  
+  
+  // Draw the histogram
+  // TCanvas * c1 = new TCanvas("c1", "SciFi", 900, 600);
+  // gStyle->SetOptFit(1011);
+  
+  cout << "Delta Ptot: " << deltaP->GetMean() << endl;
+  
+  //  deltaP->Draw();
+
+}

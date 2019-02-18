@@ -1,0 +1,38 @@
+# Run this:  ~/G4beamline-3.02/bin/g4bl LM.in viewer=best
+
+* Luminosity Monitor G4BL simulation
+
+#beam ascii file=700MeVParticlesLM11-5-18-circlecut.txt
+#beam ascii file=800MeVParticlesLM5-5-18-circlecut.txt
+#beam ascii file=800MeVParticlesLM26-6-18-circlecut-r30cm-4.991E10protons.txt
+#beam ascii file=700MeVParticlesLM26-6-18-circlecut-r30cm-1E10protons.txt
+#beam ascii file=800MeVParticlesLM26-6-18-circlecut-r30cm-4.85mdisp-5E9protons.txt
+#beam ascii file=800MeVParticlesLM-BLACKHOLE-27-6-18-circlecut-r30cm-2.3E10protons.txt
+beam ascii file=ParticlesLM26-6-18-circlecut-r13cm-4.991E10protons.txt
+
+detector SC1 height=20 width=20 length=12 material=Scintillator color=1,1,0 format=root
+box ABS height=150 width=75 length=150 material=POLYETHYLENE color=0,1,1
+detector SC2 height=30 width=30 length=12 material=Scintillator color=1,1,0 format=root
+box SPACE height=30 width=30 length=20 material=AIR color=''
+box BOX height=410 width=410 length=50.8 material=POLYETHYLENE
+box BOX2 height=50.8 width=400 length=400 material=POLYETHYLENE
+
+
+group LM
+#      place BOX
+#      place BOX2 y=200 x=0 z=130
+      place SC1
+      place SPACE
+      place ABS 
+      place SPACE
+      place SC2 
+endgroup
+
+#place LM z=9244 x=-4311 rotation=Y-25   #700
+#place LM z=9362 x=-4366 rotation=Y-25    #800 (has wrong position)
+place LM z=10000*cos(25*deg)+3 x=10000*sin(-25*deg) y=10000*sin(2.98*deg)+38 rotation=Y-25   # new MARS simulation 6/2018
+
+
+#detector END
+#place END z=1000 x=-4400 rotation=Y-25
+#zntuple z=10000 format=ascii file=after.txt

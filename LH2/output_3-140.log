@@ -1,0 +1,771 @@
+Sender: LSF System <phpcadmin@comp00>
+Subject: Job 184558: <./delta.sh> in cluster <phpc_cluster> Done
+
+Job <./delta.sh> was submitted from host <epp-ui01> by user <phswbb> in cluster <phpc_cluster>.
+Job was executed on host(s) <comp00>, in queue <xxl>, as user <phswbb> in cluster <phpc_cluster>.
+</home/phswbb> was used as the home directory.
+</home/phswbb/step4/LH2> was used as the working directory.
+Started at Wed Oct  4 17:22:56 2017
+Results reported at Wed Oct  4 18:32:34 2017
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+./delta.sh
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               4038.66 sec.
+    Max Memory :             167 MB
+    Average Memory :         140.00 MB
+    Total Requested Memory : -
+    Delta Memory :           -
+    (Delta: the difference between total requested memory and actual max usage.)
+    Max Swap :               694 MB
+
+    Max Processes :          5
+    Max Threads :            6
+
+The output (if any) follows:
+
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9654
+-rw-r--r-- 1 phswbb mice 4532332372 Sep 22 03:52 09654_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Delta Ptot: 13.9623
+Info in <TCanvas::MakeDefCanvas>:  created default TCanvas with name c1
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9659
+-rw-r--r-- 1 phswbb mice 7996188924 Sep 22 08:44 09659_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Spill: 4400
+Spill: 4500
+Spill: 4600
+Spill: 4700
+Spill: 4800
+Spill: 4900
+Spill: 5000
+Spill: 5100
+Spill: 5200
+Spill: 5300
+Spill: 5400
+Spill: 5500
+Spill: 5600
+Spill: 5700
+Spill: 5800
+Delta Ptot: 14.2799
+Info in <TCanvas::MakeDefCanvas>:  created default TCanvas with name c1
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9660
+-rw-r--r-- 1 phswbb mice 8267021358 Sep 22 11:10 09660_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Spill: 4400
+Spill: 4500
+Spill: 4600
+Spill: 4700
+Spill: 4800
+Spill: 4900
+Spill: 5000
+Spill: 5100
+Spill: 5200
+Spill: 5300
+Spill: 5400
+Spill: 5500
+Spill: 5600
+Spill: 5700
+Spill: 5800
+Spill: 5900
+Spill: 6000
+Spill: 6100
+Delta Ptot: 14.7138
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9661
+-rw-r--r-- 1 phswbb mice 5763539900 Sep 22 12:26 09661_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Spill: 4400
+Delta Ptot: 14.6255
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9677
+-rw-r--r-- 1 phswbb mice 6888915715 Sep 23 17:11 09677_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Spill: 4400
+Spill: 4500
+Spill: 4600
+Spill: 4700
+Spill: 4800
+Spill: 4900
+Spill: 5000
+Spill: 5100
+Spill: 5200
+Spill: 5300
+Spill: 5400
+Spill: 5500
+Spill: 5600
+Spill: 5700
+Spill: 5800
+Delta Ptot: 17.4408
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9678
+-rw-r--r-- 1 phswbb mice 29445 Sep 23 17:15 09678_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Delta Ptot: 0
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9679
+-rw-r--r-- 1 phswbb mice 6628311693 Sep 23 21:19 09679_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Delta Ptot: 17.9567
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9683
+-rw-r--r-- 1 phswbb mice 5582459933 Sep 24 12:19 09683_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Spill: 4400
+Spill: 4500
+Spill: 4600
+Delta Ptot: 18.9357
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9687
+-rw-r--r-- 1 phswbb mice 2477836252 Sep 24 17:50 09687_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Delta Ptot: 19.0565
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9690
+-rw-r--r-- 1 phswbb mice 71101876 Sep 24 21:56 09690_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 0
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Delta Ptot: 19.3572
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9691
+-rw-r--r-- 1 phswbb mice 6563220952 Sep 25 02:22 09691_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Delta Ptot: 19.009
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9694
+-rw-r--r-- 1 phswbb mice 6261052400 Sep 25 07:01 09694_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 0
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Delta Ptot: 19.1542
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9698
+-rw-r--r-- 1 phswbb mice 7776932596 Sep 25 13:27 09698_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Spill: 4100
+Spill: 4200
+Spill: 4300
+Spill: 4400
+Spill: 4500
+Spill: 4600
+Spill: 4700
+Spill: 4800
+Spill: 4900
+Spill: 5000
+Spill: 5100
+Spill: 5200
+Delta Ptot: 19.489
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9723
+-rw-r--r-- 1 phswbb mice 4466802205 Sep 26 02:50 09723_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Spill: 3800
+Spill: 3900
+Spill: 4000
+Delta Ptot: 19.2663
+---
+./delta.sh: line 5: //3-140: No such file or directory
+RUN:  9726
+-rw-r--r-- 1 phswbb mice 5157770821 Sep 26 07:06 09726_recon.root
+
+Processing abs_momentum_loss.c...
+Error in <TGClient::TGClient>: can't open display "epp-ui01:11.0", switching to batch mode...
+ In case you run from a remote ssh session, reconnect with ssh -Y
+Spill: 100
+Spill: 200
+Spill: 300
+Spill: 400
+Spill: 500
+Spill: 600
+Spill: 700
+Spill: 800
+Spill: 900
+Spill: 1000
+Spill: 1100
+Spill: 1200
+Spill: 1300
+Spill: 1400
+Spill: 1500
+Spill: 1600
+Spill: 1700
+Spill: 1800
+Spill: 1900
+Spill: 2000
+Spill: 2100
+Spill: 2200
+Spill: 2300
+Spill: 2400
+Spill: 2500
+Spill: 2600
+Spill: 2700
+Spill: 2800
+Spill: 2900
+Spill: 3000
+Spill: 3100
+Spill: 3200
+Spill: 3300
+Spill: 3400
+Spill: 3500
+Spill: 3600
+Spill: 3700
+Delta Ptot: 19.4245
+---

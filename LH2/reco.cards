@@ -1,0 +1,7 @@
+# pylint: disable = C0103, C0111
+verbose_level = 0
+simulation_geometry_filename = "/home/mice/MAUS/.maus-v3-0-0/09727/geo-09727/ParentGeometryFile.dat"
+reconstruction_geometry_filename = "/home/mice/MAUS/.maus-v3-0-0/09727/geo-09727/ParentGeometryFile.dat"
+SciFiMappingFileName = "9727/scifi_mapping.txt"
+SciFiCalibrationFileName = "9727/scifi_calibration.txt"
+SciFiBadChannelsFileName = "9727/scifi_bad_channels.txt"

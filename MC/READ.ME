@@ -4,3 +4,11 @@ Runs the MICE full simulation on the LSF batch system
  - edit simulate.bash
  - edit simulate_mice_G4BL.py to point at the geometry used
  - run simulate.bash
+
+Or, to run a single simulation:
+
+  python run_g4bl.py --configuration_file datacard.json 
+
+where datacard.json looks like
+
+  g4bl = {"run_number":7469,"q_1":1.018,"q_2":-1.271,"q_3":0.884,"d_1":-1.242,"d_2":-1.000,"d_s":3.666,"particles_per_spill":0,"rotation_angle":0,"translation_z":1000.0,"protonabsorberin":1,"proton_absorber_thickness":83,"proton_number":1E12,"proton_weight":1,"particle_charge":'all',"file_path":'MAUS_ROOT_DIR/src/map/MapPyBeamlineSimulation/G4bl',"get_magnet_currents_pa_cdb":"False","random_seed":1}

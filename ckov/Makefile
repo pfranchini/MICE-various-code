@@ -17,5 +17,6 @@ ckov: ckov.c
 	                      -Wl,--no-as-needed \
 			      -fdiagnostics-color \
 			      -Wno-error
-clean:	rm ckov
+clean:
+	rm ckov
 

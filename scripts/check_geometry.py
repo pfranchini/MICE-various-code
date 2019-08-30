@@ -1,3 +1,6 @@
+# Usage: python check_geometry.py --simulation_geometry_filename=/home/phswbb/geo-07469/ParentGeometryFile.dat
+# Position (-r, +r, z_min, z_max, step)  
+
 import Configuration
 import maus_cpp.globals
 import maus_cpp.material
@@ -94,7 +97,11 @@ def plot_materials(r_start, r_end, r_step, z_start, z_end, z_step):
 def main():
     initialise_maus()
     old_time = time.time()
-    plot_materials(-200.0, +200.5, 1., 13500., 13900., 0.1)
+
+    # Position (-r, +r, z_min, z_max, step)
+#    plot_materials(-200.0, +200.5, 1., 13500., 13900., 0.1)
+    plot_materials(-350.0, +350, 1., 13500., 13900., 0.1)
+
     print "Plotting took", time.time() - old_time, "seconds"
     print "Found the following materials", MATERIAL_LIST
 

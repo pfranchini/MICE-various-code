@@ -37,7 +37,7 @@ Int_t spills = 5000;          // max number of spills processed per run
 Int_t maxP = 400;           // max momentum in the activation plots (x)
 Int_t minNPE = 3;           // min NPEs in the 2D activation plots (y)
 Int_t maxNPE = 25;          // max NPEs in the activation plots (y)
-Int_t minTOF01 = 25;         // min TOF01
+Int_t minTOF01 = 25;        // min TOF01
 Int_t maxTOF01 = 35;        // max TOF01
 Int_t nbins = 50;           // number of bins in the activation plots
 Float_t field = false;      // Field ON or field OFF runs
@@ -140,7 +140,13 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
   Int_t number_of_muons = 0;
 
   TH1D* tof01 = new TH1D("tof01","TOF01 [ns]", 200, minTOF01, maxTOF01);
-  
+
+  /*  delete pe_pion_a;
+  delete pe_pion_b;
+  delete pe_muon_a;
+  delete pe_muon_b;
+  */
+
   // Loop over all spills 
   while ( (infile >> readEvent != NULL) ) {
     
@@ -317,13 +323,16 @@ int main(){
   // 240 MeV/c
   process_run("files/MAUS-v3.3.2/10419_recon.root", 26.4, 27.2, 27.7, 0);
   process_run("files/MAUS-v3.3.2/08914_recon.root", 26.4, 27.2, 27.7, 0);
+  process_run("files/MAUS-v3.3.2/08915_recon.root", 26.4, 27.2, 27.7, 0);
   
+
   if (field == false){
 
     // 300 MeV/c
     process_run("files/MAUS-v3.3.2/10304_recon.root", 26.4, 27.1, 27.6, 0);
     process_run("files/MAUS-v3.3.2/10221_recon.root", 27.0, 28.3, 29.2, 0);
-    
+    process_run("files/MAUS-v3.3.2/10222_recon.root", 27.0, 28.3, 29.2, 0);
+    process_run("files/MAUS-v3.3.2/10225_recon.root", 27.0, 28.3, 29.2, 0);
     // 400 MeV/c - 400MeV+pi_pa82
     process_run("files/MAUS-v3.3.2/08066_recon.root", 25.5, 26.3, 26.5, 0);
     process_run("files/MAUS-v3.3.2/08190_recon.root", 25.5, 26.3, 26.5, 0);
@@ -548,6 +557,7 @@ int main(){
   activation_pion_b_norm->Draw("colz");
   
   c4->SaveAs("scatter_activation.png");
+  c4->SaveAs("scatter_activation.pdf");
 
   // plot velocity 2d plots
   c6->cd(1);

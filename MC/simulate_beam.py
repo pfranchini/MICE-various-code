@@ -47,6 +47,7 @@ def run():
     my_map.append(MAUS.MapCppTrackerPatternRecognition()) # SciFi track finding
     my_map.append(MAUS.MapCppTrackerPRSeed()) # Set the Seed from PR
     my_map.append(MAUS.MapCppTrackerTrackFit()) # SciFi track fit
+    my_map.append(MAUS.MapCppTrackerTOFCombinedFit()) # ScifFi Tracker/TOF combined fit
 
     # EMR
     my_map.append(MAUS.MapCppEMRMCDigitization())  # EMR MC Digitization
@@ -55,6 +56,13 @@ def run():
 
     # Ckov
     my_map.append(MAUS.MapCppCkovMCDigitizer())
+
+
+    my_map.append(MAUS.MapCppGlobalReconImport()) # import tracks for global matching
+    my_map.append(MAUS.MapCppGlobalTrackMatching()) # global track matching
+
+    # Cuts
+    # my_map.append(MAUS.MapCppCuts())
 
     # Global Digits - post detector digitisation
 

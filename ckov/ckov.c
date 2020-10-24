@@ -4,7 +4,8 @@
 //  Ckovs:
 //   - NPEs vs P
 //   - NPEs vs TOF01
-//   - PE spectra above and below thresold
+//   - NPEs vs beta*gamma
+//   - PE spectra
 //
 //  p.franchini@imperial.ac.uk 
 //  https://github.com/pfranchini/MICE-various-code
@@ -33,12 +34,14 @@
 
 ////////////////////////////////////////////////////////////////////////
 
-Int_t spills = 5000;          // max number of spills processed per run
+Int_t spills = 4000; //4000;          // max number of spills processed per run
 Int_t maxP = 400;           // max momentum in the activation plots (x)
-Int_t minNPE = 3;           // min NPEs in the 2D activation plots (y)
+Int_t minNPE = 1; //3;           // min NPEs in the 2D activation plots (y)
 Int_t maxNPE = 25;          // max NPEs in the activation plots (y)
-Int_t minTOF01 = 25;        // min TOF01
-Int_t maxTOF01 = 35;        // max TOF01
+Int_t minTOF01 = 24.0;      // min TOF01
+Int_t maxTOF01 = 30; //28.0;      // max TOF01
+Int_t minbetagamma = 0;
+Int_t maxbetagamma = 4.5;
 Int_t nbins = 50;           // number of bins in the activation plots
 Float_t field = false;      // Field ON or field OFF runs
 
@@ -60,15 +63,15 @@ TH2D* activation_muon_a = new TH2D("activation_muon_a", "NPE vs P CkovA", nbins,
 TH2D* activation_muon_b = new TH2D("activation_muon_b", "NPE vs P CkovB", nbins, 0, maxP, maxNPE, 0, maxNPE);
 TH2D* activation_pion_a = new TH2D("activation_pion_a", "NPE vs P CkovA", nbins, 0, maxP, maxNPE, 0, maxNPE);
 TH2D* activation_pion_b = new TH2D("activation_pion_b", "NPE vs P CkovB", nbins, 0, maxP, maxNPE, 0, maxNPE);
-TH2D* activation_electron_a = new TH2D("activation_electron_a", "NPE vs P CkovA", nbins, 24, 26, 100, 0, maxNPE);
-TH2D* activation_electron_b = new TH2D("activation_electron_b", "NPE vs P CkovB", nbins, 24, 26, 100, 0, maxNPE);
+TH2D* activation_electron_a = new TH2D("activation_electron_a", "NPE vs TOF01 CkovA", nbins, 24, 26, 100, 0, maxNPE);
+TH2D* activation_electron_b = new TH2D("activation_electron_b", "NPE vs TOF01 CkovB", nbins, 24, 26, 100, 0, maxNPE);
 
 TH1D* activation_muon_histo_a = new TH1D("activation_muon_histo_a", "Muons: NPE vs P - CkovA", nbins, 0, maxP);
 TH1D* activation_muon_histo_b = new TH1D("activation_muon_histo_b", "Muons: NPE vs P - CkovB", nbins, 0, maxP);
 TH1D* activation_pion_histo_a = new TH1D("activation_pion_histo_a", "Pions: NPE vs P - CkovA", nbins, 0, maxP);
 TH1D* activation_pion_histo_b = new TH1D("activation_pion_histo_b", "Pions: NPE vs P - CkovB", nbins, 0, maxP);
-TH1D* activation_electron_histo_a = new TH1D("activation_electron_histo_a", "Electrons: NPE vs P - CkovA", nbins, 24, 26);
-TH1D* activation_electron_histo_b = new TH1D("activation_electron_histo_b", "Electrons: NPE vs P - CkovB", nbins, 24, 26);
+TH1D* activation_electron_histo_a = new TH1D("activation_electron_histo_a", "Electrons: NPE vs TOF01 - CkovA", nbins, 24, 26);
+TH1D* activation_electron_histo_b = new TH1D("activation_electron_histo_b", "Electrons: NPE vs TOF01 - CkovB", nbins, 24, 26);
 
 TH2D* activation_muon_a_norm = new TH2D("activation_muon_a_norm", "Muons: NPE vs P - CkovA", nbins, 0, maxP, maxNPE, 0, maxNPE);
 TH2D* activation_muon_b_norm = new TH2D("activation_muon_b_norm", "Muons: NPE vs P - CkovB", nbins, 0, maxP, maxNPE, 0, maxNPE);
@@ -76,14 +79,20 @@ TH2D* activation_pion_a_norm = new TH2D("activation_pion_a_norm", "Pions: NPE vs
 TH2D* activation_pion_b_norm = new TH2D("activation_pion_b_norm", "Pions: NPE vs P - CkovB", nbins, 0, maxP, maxNPE, 0, maxNPE);
 
 // NPE vs TOF01
-TH2D* velocity_muon_a = new TH2D("velocity_muon_a", "NPE vs TOF01 CkovA", nbins, 26, 28.5, maxNPE, 0, maxNPE);
-TH2D* velocity_muon_b = new TH2D("velocity_muon_b", "NPE vs TOF01 CkovB", nbins, 26, 28.5, maxNPE, 0, maxNPE);
-TH2D* velocity_pion_a = new TH2D("velocity_pion_a", "NPE vs TOF01 CkovA", nbins, 26.4, 30, maxNPE, 0, maxNPE);
-TH2D* velocity_pion_b = new TH2D("velocity_pion_b", "NPE vs TOF01 CkovB", nbins, 26.4, 30, maxNPE, 0, maxNPE);
-TH2D* velocity_muon_a_norm = new TH2D("velocity_muon_a_norm", "Muons: NPE vs TOF01 - CkovA", nbins, 26, 28.5, maxNPE, 0, maxNPE);
-TH2D* velocity_muon_b_norm = new TH2D("velocity_muon_b_norm", "Muons: NPE vs TOF01 - CkovB", nbins, 26, 28.5, maxNPE, 0, maxNPE);
-TH2D* velocity_pion_a_norm = new TH2D("velocity_pion_a_norm", "Pions: NPE vs TOF01 - CkovA", nbins, 26.4, 30, maxNPE, 0, maxNPE);
-TH2D* velocity_pion_b_norm = new TH2D("velocity_pion_b_norm", "Pions: NPE vs TOF01 - CkovB", nbins, 26.4, 30, maxNPE, 0, maxNPE);
+TH2D* velocity_a = new TH2D("velocity_a", "NPE vs TOF01 - CkovA", nbins, minTOF01, maxTOF01, maxNPE, 0, maxNPE);
+TH2D* velocity_b = new TH2D("velocity_b", "NPE vs TOF01 - CkovB", nbins, minTOF01, maxTOF01, maxNPE, 0, maxNPE);
+TH2D* velocity_a_norm = new TH2D("velocity_a_norm", "NPE vs TOF01 - CkovA", nbins, minTOF01, maxTOF01, maxNPE, 0, maxNPE);
+TH2D* velocity_b_norm = new TH2D("velocity_b_norm", "NPE vs TOF01 - CkovB", nbins, minTOF01, maxTOF01, maxNPE, 0, maxNPE);
+TH1D* velocity_histo_a = new TH1D("velocity_histo_a", "NPE vs TOF01 - CkovA", nbins, minTOF01, maxTOF01);
+TH1D* velocity_histo_b = new TH1D("velocity_histo_b", "NPE vs TOF01 - CkovB", nbins, minTOF01, maxTOF01);
+
+// NPE vs beta*gamma
+TH2D* betagamma_a = new TH2D("betagamma_a", "NPE vs #beta#gamma - CkovA", nbins, minbetagamma, maxbetagamma, maxNPE, 0, maxNPE);
+TH2D* betagamma_b = new TH2D("betagamma_b", "NPE vs #beta#gamma - CkovB", nbins, minbetagamma, maxbetagamma, maxNPE, 0, maxNPE);
+TH2D* betagamma_a_norm = new TH2D("betagamma_a_norm", "NPE vs #beta#gamma - CkovA", nbins, minbetagamma, maxbetagamma, maxNPE, 0, maxNPE);
+TH2D* betagamma_b_norm = new TH2D("betagamma_b_norm", "NPE vs #beta#gamma - CkovB", nbins, minbetagamma, maxbetagamma, maxNPE, 0, maxNPE);
+TH1D* betagamma_histo_a = new TH1D("betagamma_histo_a", "NPE vs #beta#gamma - CkovA", nbins, minbetagamma, maxbetagamma);
+TH1D* betagamma_histo_b = new TH1D("betagamma_histo_b", "NPE vs #beta#gamma - CkovB", nbins, minbetagamma, maxbetagamma);
 
 // P
 TH1D* muons = new TH1D("muons","muons spectrum", nbins, 0, maxP);
@@ -91,19 +100,19 @@ TH1D* pions = new TH1D("pions","pions spectrum", nbins, 0, maxP);
 
 TH2D* tof0_slabs = new TH2D("tof0_slabs", "TOF0", 10, 0, 9, 10, 0, 9);
 
-TCanvas *c1 = new TCanvas("c1","Activation 1D: muons and pions",1400,1200);
-TCanvas *c2 = new TCanvas("c2","electrons",1400,600);
-TCanvas *c3 = new TCanvas("c3","PEs",1400,600);
-TCanvas *c4 = new TCanvas("c4","Activation 2D: muons and pions",1400,1200);
-TCanvas *c5 = new TCanvas("c5","TOF0 slabs",800,600);
-TCanvas *c6 = new TCanvas("c6","Velocity: muons and pions",1400,1200);
+TCanvas *canvas4 = new TCanvas("canvas4","2x2 canvas",1400,1200);
+TCanvas *canvas2 = new TCanvas("canvas2","2x1 canvas",2800,1200);
+TCanvas *canvas2b = new TCanvas("canvas2b","2x1 canvas",1400,600);
 
 TFile *output = new TFile("ckov.root","RECREATE");
 
-void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c, Float_t fieldon ) {
+void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c, Float_t fieldon, double n0_a, double n0_b, double t_e ) {
   // t_a: lower bound for muons
   // t_b: upper bound for muons
   // t_c: lower bound for pions
+
+  //  TH2D* velocity_a = new TH2D("velocity_a", "NPE vs TOF01 - CkovA", nbins, minTOF01, maxTOF01, maxNPE, 0, maxNPE);
+  //  TH2D* velocity_b = new TH2D("velocity_b", "NPE vs TOF01 - CkovB", nbins, minTOF01, maxTOF01, maxNPE, 0, maxNPE);
 
   MAUS::Data data;
   MAUS::Spill* spill;
@@ -126,7 +135,7 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
   std::cout << std::endl << "Processing file: " << filename << std::endl;
   irstream infile(filename.c_str(), "Spill");
 
-  Int_t NPEA, NPEB;
+  double NPEA, NPEB;
   Double_t dt01, m, P;
   Int_t nspill = 0;
   unsigned int track;
@@ -178,10 +187,12 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
       
       // tof01                                                                                                                                       
       dt01 = tof1_space_points.GetTime()-tof0_space_points.GetTime();
-      
-      //// Tracker
-      scifi_events = revts->at(j)->GetSciFiEvent(); // Pull out scifi event
-      scifi_tracks = scifi_events->scifitracks(); // Pull out tracks  
+
+      if (fieldon) {
+	//// Tracker
+	scifi_events = revts->at(j)->GetSciFiEvent(); // Pull out scifi event
+	scifi_tracks = scifi_events->scifitracks(); // Pull out tracks  
+      }
 
       //// CKov
       ckov_events = revts->at(j)->GetCkovEvent(); // Pull out ckovs event
@@ -205,19 +216,35 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
       }
       
       m = 0;
+
       NPEA = 0;
       NPEB = 0;
+      NPEA = ckovA.GetNumberOfPes() - n0_a;
+      NPEB = ckovB.GetNumberOfPes() - n0_b;
+
+      // CUT: CkovB should have more PEs than CkovA
+      if (NPEA>NPEB) continue;
+
+      // Velocity
+      velocity_a->Fill(dt01,NPEA);
+      velocity_b->Fill(dt01,NPEB);
+      
+      betagamma_a->Fill(sqrt(pow(t_e,2)/(pow(dt01,2)-pow(t_e,2))),NPEA);
+      betagamma_b->Fill(sqrt(pow(t_e,2)/(pow(dt01,2)-pow(t_e,2))),NPEB);
 
       // Tight species selection
       Double_t dt = 0.01;
       if ( (dt01>t_a+dt) && (dt01<t_b-dt) )  // muons
 	m=m_muon;
-      else if (dt01>t_c+dt)  // pions
+      else if (dt01>t_c+dt)  {// pions 
 	m=m_pion;
+	//velocity_a->Fill(dt01,NPEA);
+	//velocity_b->Fill(dt01,NPEB);
+      }
       else if (dt01<t_a-dt*2)  // electrons
 	m=m_electron;
       else
-	continue;
+      	continue;
       
       tof01->Fill(dt01);
 
@@ -225,11 +252,6 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
 	P = sqrt(pow(trackpoints[track]->mom()[0],2)+pow(trackpoints[track]->mom()[1],2)+pow(trackpoints[track]->mom()[2],2));	// P from Trackers
       else
 	P = (m*(tof1-tof0)/c)/sqrt( pow(dt01*1e-9,2) - pow((tof1-tof0)/c,2) );                                                  // P from TOF01
-      
-      NPEA = ckovA.GetNumberOfPes();
-      NPEB = ckovB.GetNumberOfPes();
-      // CUT: CkovB should have more PEs than CkovA
-      if (NPEA>NPEB) continue;
       
       // CUT: only central pixels in TOF0 and TOF1 in order to have co-axial tracks
       //if (tof0_space_points.GetSlabx()<4 || tof0_space_points.GetSlabx()>5 || tof0_space_points.GetSlaby()<4 || tof0_space_points.GetSlaby()>5 ) continue;
@@ -247,12 +269,9 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
 	if (P<2.67610e+02) pe_muon_a_under->Fill(NPEA);//
 	if (P<2.21751e+02) pe_muon_b_under->Fill(NPEB);
 
-	activation_muon_a->Fill(P,NPEA);
-	activation_muon_b->Fill(P,NPEB);
+	activation_muon_a->Fill(P,NPEA - n0_a);
+	activation_muon_b->Fill(P,NPEB - n0_b);
 	muons->Fill(P);
-
-	velocity_muon_a->Fill(dt01,NPEA);
-	velocity_muon_b->Fill(dt01,NPEB);
 
 	++number_of_pions;
       }
@@ -268,8 +287,6 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
 	activation_pion_b->Fill(P,NPEB);
 	pions->Fill(P);
 
-	velocity_pion_a->Fill(dt01,NPEA);
-	velocity_pion_b->Fill(dt01,NPEB);
 	++number_of_muons;
       }
       if (m==m_electron) {
@@ -292,11 +309,48 @@ void process_run( std::string filename, Double_t t_a, Double_t t_b, Double_t t_c
   output->cd();
   muons->Write();
   pions->Write();
+
+  tof01->GetXaxis()->SetRangeUser(25.,25.8);
+  tof01->Fit("gaus");
   tof01->Write();
 
   std::cout << std::endl << "Muons: " << number_of_muons << " - Pions: " << number_of_pions << std::endl;
 
-}
+  // Analyse activation for a single run
+  /*
+  for ( Int_t bin = 1; bin < activation_muon_a->GetNbinsX(); bin++ ){
+    TH1D *prof_velocity_a = velocity_a->ProjectionY("prof_velocity_a",bin,bin+1,"");
+    TH1D *prof_velocity_b = velocity_b->ProjectionY("prof_velocity_b",bin,bin+1,"");
+    velocity_histo_a->SetBinContent(bin,prof_velocity_a->GetMean());
+    velocity_histo_a->SetBinError(bin,prof_velocity_a->GetRMS()/sqrt(prof_velocity_a->GetEntries()));
+    velocity_histo_b->SetBinContent(bin,prof_velocity_b->GetMean());
+    velocity_histo_b->SetBinError(bin,prof_velocity_b->GetRMS()/sqrt(prof_velocity_b->GetEntries()));
+  }
+  c6->cd(1);
+  velocity_histo_a->GetYaxis()->SetRangeUser(minNPE,10.);
+  velocity_histo_a->GetXaxis()->SetRangeUser(29,35);
+  velocity_histo_a->Fit("pol0");
+  velocity_histo_a->GetXaxis()->SetTitle("TOF01 [ns]");
+  velocity_histo_a->GetYaxis()->SetTitle("NPE");
+  velocity_histo_a->SetMarkerStyle(10);
+  velocity_histo_a->Draw("E1");
+
+  c6->cd(2);
+  velocity_histo_b->GetYaxis()->SetRangeUser(minNPE,10.);
+  velocity_histo_b->GetXaxis()->SetRangeUser(29,35.);
+  velocity_histo_b->Fit("pol0"); 
+  velocity_histo_b->GetXaxis()->SetTitle("TOF01 [ns]");
+  velocity_histo_b->GetYaxis()->SetTitle("NPE");
+  velocity_histo_b->SetMarkerStyle(10);
+  velocity_histo_b->Draw("E1");
+
+  velocity_histo_a->Write();
+  velocity_histo_b->Write();
+  c6->SaveAs("velocity.png");
+  system("eog velocity.png");
+  */
+
+}  // process_run()
 
 
 int main(){
@@ -304,44 +358,46 @@ int main(){
   std::cout << "Spills for each file to be processed: " << spills << std::endl;
   std::string filename;
 
-  c1->Divide(2,2);
-  c2->Divide(2,1);
-  c3->Divide(2,1);
-  c4->Divide(2,2);
-  c6->Divide(2,2);
+  canvas4->Divide(2,2);
+  canvas2->Divide(2,1);
+     
   gStyle->SetOptStat(0);
 
   // 140 MeV/c
-  process_run("files/MAUS-v3.3.2/10488_recon.root", 28.0, 31.5, 33.0, 0);
-  
+  process_run("files/MAUS-v3.3.2/10488_recon.root", 28.0, 31.5, 33.0, 0, 0.922459, 0.90914, 2.53854e+01);
+
   // 170 MeV/c
-  process_run("files/MAUS-v3.3.2/10496_recon.root", 27.5, 30.0, 31.5, 0);
+  process_run("files/MAUS-v3.3.2/10496_recon.root", 27.5, 30.0, 31.5, 0, 0.952804, 0.940854, 2.53644e+01);
   
   // 200 MeV/c
-  process_run("files/MAUS-v3.3.2/10391_recon.root", 27.5, 29.0, 30.0, 0); 
+  process_run("files/MAUS-v3.3.2/10391_recon.root", 27.5, 29.0, 30.0, 0, 0.969069, 0.922955, 2.53314e+01); 
   
   // 240 MeV/c
-  process_run("files/MAUS-v3.3.2/10419_recon.root", 26.4, 27.2, 27.7, 0);
-  process_run("files/MAUS-v3.3.2/08914_recon.root", 26.4, 27.2, 27.7, 0);
-  process_run("files/MAUS-v3.3.2/08915_recon.root", 26.4, 27.2, 27.7, 0);
+  process_run("files/MAUS-v3.3.2/10419_recon.root", 26.4, 27.2, 27.7, 0, 1.04217, 1.3788, 2.53400e+01);
+  // bad n0 process_run("files/MAUS-v3.3.2/08914_recon.root", 26.4, 27.2, 27.7, 0, 1.0, 999);
+  process_run("files/MAUS-v3.3.2/08915_recon.root", 26.4, 27.2, 27.7, 0, 1.11099, 1.57024, 2.53618e+01);
   
 
   if (field == false){
 
     // 300 MeV/c
-    process_run("files/MAUS-v3.3.2/10304_recon.root", 26.4, 27.1, 27.6, 0);
-    process_run("files/MAUS-v3.3.2/10221_recon.root", 27.0, 28.3, 29.2, 0);
-    process_run("files/MAUS-v3.3.2/10222_recon.root", 27.0, 28.3, 29.2, 0);
-    process_run("files/MAUS-v3.3.2/10225_recon.root", 27.0, 28.3, 29.2, 0);
+    // bad n0    process_run("files/MAUS-v3.3.2/10304_recon.root", 26.4, 27.1, 27.6, 0, 1.0, 999);
+    process_run("files/MAUS-v3.3.2/10221_recon.root", 27.0, 28.3, 29.2, 0, 1.00634, 1.05541, 2.53377e+01);
+    process_run("files/MAUS-v3.3.2/10222_recon.root", 27.0, 28.3, 29.2, 0, 1.04102, 1.06716, 2.53445e+01);
+    process_run("files/MAUS-v3.3.2/10225_recon.root", 27.0, 28.3, 29.2, 0, 0.968682, 0.97672, 2.53465e+01);
     // 400 MeV/c - 400MeV+pi_pa82
-    process_run("files/MAUS-v3.3.2/08066_recon.root", 25.5, 26.3, 26.5, 0);
-    process_run("files/MAUS-v3.3.2/08190_recon.root", 25.5, 26.3, 26.5, 0);
-    process_run("files/MAUS-v3.3.2/10215_recon.root", 25.5, 26.3, 26.5, 0);
-    process_run("files/MAUS-v3.3.2/10518_recon.root", 25.5, 26.3, 26.5, 0);
-    process_run("files/MAUS-v3.3.2/10519_recon.root", 25.5, 26.3, 26.5, 0);
-    process_run("files/MAUS-v3.3.2/10520_recon.root", 25.5, 26.3, 26.5, 0);
-
+    // ?    process_run("files/MAUS-v3.3.2/08066_recon.root", 25.5, 26.3, 26.5, 0, 1.0, 999); 
+    //process_run("files/MAUS-v3.3.2/08190_recon.root", 25.5, 26.3, 26.5, 0, 1.0, 999);  //SSU-E1CE2-NoTrims140A-FC50A
+    /*  process_run("files/MAUS-v3.3.2/10215_recon.root", 25.5, 26.3, 26.5, 0, 1.0, 999);
+    process_run("files/MAUS-v3.3.2/10518_recon.root", 25.5, 26.3, 26.5, 0, 1.0, 999);
+    process_run("files/MAUS-v3.3.2/10519_recon.root", 25.5, 26.3, 26.5, 0, 1.0, 999);
+    */
+    
+    // bad n0: 
+    process_run("files/MAUS-v3.3.2/10520_recon.root", 25.5, 26.3, 26.5, 0, 1.0, 1.0, 2.53377e+01);
+    
   }
+  
 
   // Histograms from the 2D plots  
   for ( Int_t bin = 1; bin < activation_muon_a->GetNbinsX(); bin++ ){
@@ -351,7 +407,11 @@ int main(){
     TH1D *prof_pion_b = activation_pion_b->ProjectionY("prof_pion_b",bin,bin+1,"");
     TH1D *prof_electron_a = activation_electron_a->ProjectionY("prof_electron_a",bin,bin+1,"");
     TH1D *prof_electron_b = activation_electron_b->ProjectionY("prof_electron_b",bin,bin+1,"");
-    // graph->SetPoint(bin*maxP/activation_muon_a->GetNbinsX(),bin*maxP/activation_muon_a->GetNbinsX(),prof_a->GetMean())
+    TH1D *prof_velocity_a = velocity_a->ProjectionY("prof_velocity_a",bin,bin+1,"");
+    TH1D *prof_velocity_b = velocity_b->ProjectionY("prof_velocity_b",bin,bin+1,"");
+    TH1D *prof_betagamma_a = betagamma_a->ProjectionY("prof_betagamma_a",bin,bin+1,"");
+    TH1D *prof_betagamma_b = betagamma_b->ProjectionY("prof_betagamma_b",bin,bin+1,"");
+    
     activation_muon_histo_a->SetBinContent(bin,prof_muon_a->GetMean());
     activation_muon_histo_a->SetBinError(bin,prof_muon_a->GetRMS()); // /sqrt(prof_muon_a->GetEntries())); // error on the mean: sd/sqrt(n)
     activation_muon_histo_b->SetBinContent(bin,prof_muon_b->GetMean());
@@ -364,10 +424,55 @@ int main(){
     activation_electron_histo_a->SetBinError(bin,prof_electron_a->GetRMS()/sqrt(prof_electron_a->GetEntries()));
     activation_electron_histo_b->SetBinContent(bin,prof_electron_b->GetMean());
     activation_electron_histo_b->SetBinError(bin,prof_electron_b->GetRMS()/sqrt(prof_electron_b->GetEntries()));
+    
+    // Try fitting each TOF01 bin
+    /*
+    if (prof_velocity_a->Fit("gaus") == 0) {
+      TF1 *gfit_a = (TF1 *)prof_velocity_a->GetFunction("gaus");
+      velocity_histo_a->SetBinContent(bin,gfit_a->GetParameter(1));
+      velocity_histo_a->SetBinError(bin,gfit_a->GetParameter(2));
+    }      
+    if (prof_velocity_b->Fit("gaus") == 0) {
+      TF1 *gfit_b = (TF1 *)prof_velocity_b->GetFunction("gaus");
+      velocity_histo_b->SetBinContent(bin,gfit_b->GetParameter(1));
+      velocity_histo_b->SetBinError(bin,gfit_b->GetParameter(2));
+    }*/
+
+    // Use the mean for each TOF01 bin
+    velocity_histo_a->SetBinContent(bin,prof_velocity_a->GetMean());
+    velocity_histo_a->SetBinError(bin,prof_velocity_a->GetRMS()/sqrt(prof_velocity_a->GetEntries()));
+    velocity_histo_b->SetBinContent(bin,prof_velocity_b->GetMean());
+    velocity_histo_b->SetBinError(bin,prof_velocity_b->GetRMS()/sqrt(prof_velocity_b->GetEntries()));
+
+    // Try fitting each betagamma bin
+    prof_betagamma_a->GetXaxis()->SetRangeUser(0,20);
+    if (prof_betagamma_a->Fit("gaus") == 0) {
+      TF1 *gfit_a = (TF1 *)prof_betagamma_a->GetFunction("gaus");
+      betagamma_histo_a->SetBinContent(bin,gfit_a->GetParameter(1));
+      betagamma_histo_a->SetBinError(bin,gfit_a->GetParameter(2));
+    }      
+    prof_betagamma_b->GetXaxis()->SetRangeUser(0,20);
+    if (prof_betagamma_b->Fit("gaus") == 0) {
+      TF1 *gfit_b = (TF1 *)prof_betagamma_b->GetFunction("gaus");
+      betagamma_histo_b->SetBinContent(bin,gfit_b->GetParameter(1));
+      betagamma_histo_b->SetBinError(bin,gfit_b->GetParameter(2));
+      
+    }
+    prof_betagamma_a->Write();
+    prof_betagamma_b->Write();
+
+    // Use the mean for each betagamma bin
+    /*    betagamma_histo_a->SetBinContent(bin,prof_betagamma_a->GetMean());
+    betagamma_histo_a->SetBinError(bin,prof_betagamma_a->GetRMS()/sqrt(prof_betagamma_a->GetEntries()));
+    betagamma_histo_b->SetBinContent(bin,prof_betagamma_b->GetMean());
+    betagamma_histo_b->SetBinError(bin,prof_betagamma_b->GetRMS()/sqrt(prof_betagamma_b->GetEntries()));
+    */
+
   }
 
   /// Fit functions
-  TF1 *func_muon_a=new TF1("func_muon_a","[0] + [1]*(1-([2]/x)^2)",260.,500.);
+  //TF1 *func_muon_a=new TF1("func_muon_a","[0] + [1]*(1-([2]/x)^2)",260.,500.);
+  TF1 *func_muon_a=new TF1("func_muon_a","[0] + [1]*x + [2]*x*x",260.,500.);
   func_muon_a->SetParameters(0.75,12,260);
   func_muon_a->SetParLimits(0,0,1.5);
   func_muon_a->SetParLimits(1,10,18);
@@ -397,7 +502,8 @@ int main(){
 
   /// Plot
   // 1D histograms with fits for muons and pions
-  c1->cd(1);
+  std::cout << std::endl << "Fit 1D activiation functions..." << std::endl;
+  canvas4->cd(1);
   activation_muon_histo_a->GetXaxis()->SetRangeUser(150.,500.);
   activation_muon_histo_a->GetYaxis()->SetRangeUser(0.,18.);
   activation_muon_histo_a->SetMarkerStyle(10);
@@ -407,7 +513,7 @@ int main(){
   activation_muon_histo_a->Draw("E1");
   func_muon_a->Draw("sames");
 
-  c1->cd(2);
+  canvas4->cd(2);
   activation_muon_histo_b->GetXaxis()->SetRangeUser(150.,500.);
   activation_muon_histo_b->GetYaxis()->SetRangeUser(0.,18.);
   activation_muon_histo_b->SetMarkerStyle(10);
@@ -418,7 +524,7 @@ int main(){
   func_muon_b->Draw("sames");
 
 
-  c1->cd(3);
+  canvas4->cd(3);
   activation_pion_histo_a->GetXaxis()->SetRangeUser(150.,500.);
   activation_pion_histo_a->GetYaxis()->SetRangeUser(0.,18.);
   activation_pion_histo_a->SetMarkerStyle(10);
@@ -428,7 +534,7 @@ int main(){
   activation_pion_histo_a->Draw("E1");
   func_pion_a->Draw("sames");
 
-  c1->cd(4);
+  canvas4->cd(4);
   activation_pion_histo_b->GetXaxis()->SetRangeUser(150.,500.);
   activation_pion_histo_b->GetYaxis()->SetRangeUser(0.,18.);
   activation_pion_histo_b->SetMarkerStyle(10);
@@ -438,29 +544,27 @@ int main(){
   activation_pion_histo_b->Draw("E1");
   func_pion_b->Draw("sames");
 
-  c1->SaveAs("plot.png");
-  c1->SaveAs("Ckov_photoelectrons_vs_P.pdf");
-  system("eog plot.png &");
-
+  canvas4->SaveAs("plot.png");
+  canvas4->SaveAs("Ckov_photoelectrons_vs_P.pdf");
 
   // 1D histograms with fits for electrons
-  c2->cd(1);
+  canvas2->cd(1);
+  std::cout << std::endl << "Fit 1D activiation functions for electrons..." << std::endl;
   //  activation_electron_histo_a->GetXaxis()->SetRangeUser(150.,500.);
-  activation_electron_histo_a->GetYaxis()->SetRangeUser(15.,18.);
+  activation_electron_histo_a->GetYaxis()->SetRangeUser(15.,22.);
   activation_electron_histo_a->SetMarkerStyle(10);
-  activation_electron_histo_a->GetXaxis()->SetTitle("P [MeV/c]");
+  activation_electron_histo_a->GetXaxis()->SetTitle("TOF01 [ns]");
   activation_electron_histo_a->Fit("pol0","R");
   activation_electron_histo_a->Draw("E1");
 
-  c2->cd(2);
+  canvas2->cd(2);
   //  activation_electron_histo_b->GetXaxis()->SetRangeUser(150.,500.);
-  activation_electron_histo_b->GetYaxis()->SetRangeUser(18.,22.);
+  activation_electron_histo_b->GetYaxis()->SetRangeUser(15.,22.);
   activation_electron_histo_b->SetMarkerStyle(10);
-  activation_electron_histo_b->GetXaxis()->SetTitle("P [MeV/c]");
+  activation_electron_histo_b->GetXaxis()->SetTitle("TOF01 [ns]");
   activation_electron_histo_b->Fit("pol0","R");
   activation_electron_histo_b->Draw("E1");
-
-  c2->SaveAs("electron.png");
+  canvas2->SaveAs("electron.png");
 
   // 2D histograms with fits for muons and pions  
   // normalise 2D activation plots
@@ -488,32 +592,35 @@ int main(){
       activation_pion_b_norm->SetBinContent(i,j,activation_pion_b->GetBinContent(i,j)/prof->GetEntries());
     }
   }  
-
+  
   // normalise 2D velocity plots
-  for ( Int_t i = 0; i < velocity_muon_a->GetNbinsX(); i++ ) {
-    TH1D *prof = velocity_muon_a->ProjectionY("prof",i,i,"");
-    for ( Int_t j = 0; j < velocity_muon_a->GetNbinsY(); j++ ) {
-      velocity_muon_a_norm->SetBinContent(i,j,velocity_muon_a->GetBinContent(i,j)/prof->GetEntries());
+  for ( Int_t i = 0; i < velocity_a->GetNbinsX(); i++ ) {
+    TH1D *prof = velocity_a->ProjectionY("prof",i,i,"");
+  for ( Int_t j = 0; j < velocity_a->GetNbinsY(); j++ ) {
+    velocity_a_norm->SetBinContent(i,j,velocity_a->GetBinContent(i,j)/prof->GetEntries());
+  }
+  }  
+  for ( Int_t i = 0; i < velocity_b->GetNbinsX(); i++ ) {
+    TH1D *prof = velocity_b->ProjectionY("prof",i,i,"");
+    for ( Int_t j = 0; j < velocity_b->GetNbinsY(); j++ ) {
+      velocity_b_norm->SetBinContent(i,j,velocity_b->GetBinContent(i,j)/prof->GetEntries());
     }
   }  
-  for ( Int_t i = 0; i < velocity_muon_b->GetNbinsX(); i++ ) {
-    TH1D *prof = velocity_muon_b->ProjectionY("prof",i,i,"");
-    for ( Int_t j = 0; j < velocity_muon_b->GetNbinsY(); j++ ) {
-      velocity_muon_b_norm->SetBinContent(i,j,velocity_muon_b->GetBinContent(i,j)/prof->GetEntries());
+
+  // normalise 2D betagamma plots
+  for ( Int_t i = 0; i < betagamma_a->GetNbinsX(); i++ ) {
+    TH1D *prof = betagamma_a->ProjectionY("prof",i,i,"");
+    for ( Int_t j = 0; j < betagamma_a->GetNbinsY(); j++ ) {
+      betagamma_a_norm->SetBinContent(i,j,betagamma_a->GetBinContent(i,j)/prof->GetEntries());
     }
   }  
-  for ( Int_t i = 0; i < velocity_pion_a->GetNbinsX(); i++ ) {
-    TH1D *prof = velocity_pion_a->ProjectionY("prof",i,i,"");
-    for ( Int_t j = 0; j < velocity_pion_a->GetNbinsY(); j++ ) {
-      velocity_pion_a_norm->SetBinContent(i,j,velocity_pion_a->GetBinContent(i,j)/prof->GetEntries());
+  for ( Int_t i = 0; i < betagamma_b->GetNbinsX(); i++ ) {
+    TH1D *prof = betagamma_b->ProjectionY("prof",i,i,"");
+    for ( Int_t j = 0; j < betagamma_b->GetNbinsY(); j++ ) {
+      betagamma_b_norm->SetBinContent(i,j,betagamma_b->GetBinContent(i,j)/prof->GetEntries());
     }
   }  
-  for ( Int_t i = 0; i < velocity_pion_b->GetNbinsX(); i++ ) {
-    TH1D *prof = velocity_pion_b->ProjectionY("prof",i,i,"");
-    for ( Int_t j = 0; j < velocity_pion_b->GetNbinsY(); j++ ) {
-      velocity_pion_b_norm->SetBinContent(i,j,velocity_pion_b->GetBinContent(i,j)/prof->GetEntries());
-    }
-  }  
+
 
   // kBird for ROOT 5
   Double_t red[9]   = { 0.2082, 0.0592, 0.0780, 0.0232, 0.1802, 0.5301, 0.8186, 0.9956, 0.9764};
@@ -522,76 +629,122 @@ int main(){
   Double_t stops[9] = { 0.0000, 0.1250, 0.2500, 0.3750, 0.5000, 0.6250, 0.7500, 0.8750, 1.0000};
   Int_t nb=255;
   TColor::CreateGradientColorTable(9, stops, red, green, blue, nb);
-  c4->SetFrameFillColor(31);
-  c6->SetFrameFillColor(41);
-
-  gStyle->SetCanvasColor(3);
+  //canvas4->SetFrameFillColor(31);
+  //canvas2->SetFrameFillColor(41);
+  //  gStyle->SetCanvasColor(3);
 
   // plot activation 2d plots
-  c4->cd(1);
+  canvas4->cd(1);
+  std::cout << std::endl << "Fit 2D activiation functions..." << std::endl;
   activation_muon_a_norm->GetXaxis()->SetRangeUser(150.,500.);
   activation_muon_a_norm->GetYaxis()->SetRangeUser(minNPE,18.);
   activation_muon_a_norm->GetXaxis()->SetTitle("P [MeV/c]");
-  activation_muon_a_norm->Fit("func_muon_a","R");
+  //activation_muon_a_norm->Fit("func_muon_a","R");
+  activation_muon_a_norm->Fit("pol3","R");
   activation_muon_a_norm->Draw("colz");
 
-  c4->cd(2);
+  canvas4->cd(2);
   activation_muon_b_norm->GetXaxis()->SetRangeUser(150.,500.);
   activation_muon_b_norm->GetYaxis()->SetRangeUser(minNPE,18.);
   activation_muon_b_norm->GetXaxis()->SetTitle("P [MeV/c]");
-  activation_muon_b_norm->Fit("func_muon_a","R");
+  //activation_muon_b_norm->Fit("func_muon_a","R");
+  activation_muon_b_norm->Fit("pol3","R");
   activation_muon_b_norm->Draw("colz");
 
-  c4->cd(3);
+  canvas4->cd(3);
   activation_pion_a_norm->GetXaxis()->SetRangeUser(150.,500.);
   activation_pion_a_norm->GetYaxis()->SetRangeUser(minNPE,14.);
   activation_pion_a_norm->GetXaxis()->SetTitle("P [MeV/c]");
-  activation_pion_a_norm->Fit("func_pion_a","R");
+  //activation_pion_a_norm->Fit("func_pion_a","R");
+  activation_pion_a_norm->Fit("pol3","R");
   activation_pion_a_norm->Draw("colz");
 
-  c4->cd(4);
+  canvas4->cd(4);
   activation_pion_b_norm->GetXaxis()->SetRangeUser(150.,500.);
   activation_pion_b_norm->GetYaxis()->SetRangeUser(minNPE,14.);
   activation_pion_b_norm->GetXaxis()->SetTitle("P [MeV/c]");
-  activation_pion_b_norm->Fit("func_pion_b","R");
+  //activation_pion_b_norm->Fit("func_pion_b","R");
+  activation_pion_b_norm->Fit("pol3","R");
   activation_pion_b_norm->Draw("colz");
   
-  c4->SaveAs("scatter_activation.png");
-  c4->SaveAs("scatter_activation.pdf");
+  canvas4->SaveAs("scatter_activation.png");
+  canvas4->SaveAs("scatter_activation.pdf");
 
-  // plot velocity 2d plots
-  c6->cd(1);
-  //  velocity_muon_a_norm->GetXaxis()->SetRangeUser(150.,500.);
-  velocity_muon_a_norm->GetYaxis()->SetRangeUser(minNPE,18.);
-  velocity_muon_a_norm->GetXaxis()->SetTitle("TOF01 [ns]");
-  //  velocity_muon_a_norm->Fit("func_muon_a","R");
-  velocity_muon_a_norm->Draw("colz");
-
-  c6->cd(2);
-  //  velocity_muon_b_norm->GetXaxis()->SetRangeUser(150.,500.);
-  velocity_muon_b_norm->GetYaxis()->SetRangeUser(minNPE,18.);
-  velocity_muon_b_norm->GetXaxis()->SetTitle("TOF01 [ns]");
-  //  velocity_muon_b_norm->Fit("func_muon_a","R");
-  velocity_muon_b_norm->Draw("colz");
-
-  c6->cd(3);
-  //  velocity_pion_a_norm->GetXaxis()->SetRangeUser(150.,500.);
-  velocity_pion_a_norm->GetYaxis()->SetRangeUser(minNPE,14.);
-  velocity_pion_a_norm->GetXaxis()->SetTitle("TOF01 [ns]");
-  //  velocity_pion_a_norm->Fit("func_pion_a","R");
-  velocity_pion_a_norm->Draw("colz");
-
-  c6->cd(4);
-  //  velocity_pion_b_norm->GetXaxis()->SetRangeUser(150.,500.);
-  velocity_pion_b_norm->GetYaxis()->SetRangeUser(minNPE,14.);
-  velocity_pion_b_norm->GetXaxis()->SetTitle("TOF01 [ns]");
-  //  velocity_pion_b_norm->Fit("func_pion_b","R");
-  velocity_pion_b_norm->Draw("colz");
+  // plot velocity 1d plots
+  canvas2->cd(1);
+  velocity_histo_a->GetYaxis()->SetRangeUser(minNPE,24.);
+  velocity_histo_a->GetXaxis()->SetTitle("TOF01 [ns]");
+  velocity_histo_a->GetYaxis()->SetTitle("NPE");
+  //  velocity_histo_a->SetTitle("NPE vs TOF01 - CkovA");
+  velocity_histo_a->SetMarkerStyle(10);
+  //  velocity_histo_a->Fit("func_a","R");
+  velocity_histo_a->Draw("E1");
   
-  c6->SaveAs("scatter_velocity.png");
+  canvas2->cd(2);
+  velocity_histo_b->GetYaxis()->SetRangeUser(minNPE,24.);
+  velocity_histo_b->GetXaxis()->SetTitle("TOF01 [ns]");
+  velocity_histo_b->GetYaxis()->SetTitle("NPE");
+  //velocity_histo_b->SetTitle("NPE vs TOF01 - CkovB");
+  velocity_histo_b->SetMarkerStyle(10);
+  //  velocity_histo_b->Fit("func_a","R");
+  velocity_histo_b->Draw("E1");
+  gPad->Modified();
+  gPad->Update();
+  canvas2->SaveAs("velocity.png");
+  system("eog velocity.png &");
+  
+  // velocity 2D plots
+  canvas2->cd(1);
+  velocity_a_norm->GetXaxis()->SetRangeUser(24.8,maxTOF01);
+  velocity_a_norm->GetYaxis()->SetRangeUser(minNPE,24.);
+  velocity_a_norm->GetXaxis()->SetTitle("TOF01 [ns]");
+  velocity_a_norm->GetYaxis()->SetTitle("NPE");
+  velocity_a_norm->Draw("colz");
+  canvas2->cd(2);
+  velocity_b_norm->GetXaxis()->SetRangeUser(24.8,maxTOF01);
+  velocity_b_norm->GetYaxis()->SetRangeUser(minNPE,24.);
+  velocity_b_norm->GetXaxis()->SetTitle("TOF01 [ns]");
+  velocity_b_norm->GetYaxis()->SetTitle("NPE");
+  velocity_b_norm->Draw("colz");
+  gPad->Modified();
+  gPad->Update();
+  canvas2->SaveAs("scatter_velocity.png");
 
 
-  c3->cd(1);
+  // plot betagamma 1d plots
+  canvas2->cd(1);
+  betagamma_histo_a->GetYaxis()->SetRangeUser(minNPE,24.);
+  betagamma_histo_a->GetXaxis()->SetTitle("#beta#gamma");
+  betagamma_histo_a->GetYaxis()->SetTitle("NPE");
+  betagamma_histo_a->SetMarkerStyle(10);
+  betagamma_histo_a->Draw("E1");
+  canvas2->cd(2);
+  betagamma_histo_b->GetYaxis()->SetRangeUser(minNPE,24.);
+  betagamma_histo_b->GetXaxis()->SetTitle("#beta#gamma");
+  betagamma_histo_b->GetYaxis()->SetTitle("NPE");
+  betagamma_histo_b->SetMarkerStyle(10);
+  betagamma_histo_b->Draw("E1");
+  canvas2->SaveAs("betagamma.png");
+
+
+  // betagamma 2D plots
+  canvas2->cd(1);
+  betagamma_a_norm->GetYaxis()->SetRangeUser(minNPE,24.);
+  betagamma_a_norm->GetXaxis()->SetTitle("#beta#gamma");
+  betagamma_a_norm->GetYaxis()->SetTitle("NPE");
+  betagamma_a_norm->Draw("colz");
+  canvas2->cd(2);
+  betagamma_b_norm->GetYaxis()->SetRangeUser(minNPE,24.);
+  betagamma_b_norm->GetXaxis()->SetTitle("#beta#gamma");
+  betagamma_b_norm->GetYaxis()->SetTitle("NPE");
+  betagamma_b_norm->Draw("colz");
+  gPad->Modified();
+  gPad->Update();
+  canvas2->SaveAs("scatter_betagamma.png");
+  canvas2->SaveAs("scatter_betagamma.pdf");
+
+  /*
+  canvas2->cd(1);
   gPad->SetLogy();
   pe_muon_a->GetXaxis()->SetTitle("NPE");
   pe_pion_a->GetXaxis()->SetTitle("NPE");
@@ -616,7 +769,7 @@ int main(){
   pe_muon_a_under->Draw("sames");
   pe_pion_a_under->Draw("sames");
 
-  c3->cd(2);
+  canvas2->cd(2);
   gPad->SetLogy();
   pe_muon_b->GetXaxis()->SetTitle("NPE");
   pe_pion_b->GetXaxis()->SetTitle("NPE");
@@ -641,19 +794,20 @@ int main(){
   pe_muon_b_under->Draw("sames");
   pe_pion_b_under->Draw("sames");
 
-  c3->SaveAs("npe.png");
-  c3->SaveAs("Ckov_photoelectrons_spectra.pdf");
+  //  canvas2-->SaveAs("npe.png");
+  //  canvas2-->SaveAs("Ckov_photoelectrons_spectra.pdf");
 
+  */
 
   /// Save on root file
   activation_muon_a_norm->Write();
   activation_muon_b_norm->Write();
   activation_pion_a_norm->Write();
   activation_pion_b_norm->Write();
-  velocity_muon_a_norm->Write();
-  velocity_muon_b_norm->Write();
-  velocity_pion_a_norm->Write();
-  velocity_pion_b_norm->Write();
+  velocity_a_norm->Write();
+  velocity_b_norm->Write();
+  betagamma_histo_a->Write();
+  betagamma_histo_b->Write();
   activation_muon_histo_a->Write();
   activation_muon_histo_b->Write();
   activation_pion_histo_a->Write();

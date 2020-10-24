@@ -20,3 +20,6 @@ virtual/radius.pdf
 virtual/radius.png
 virtual/virtual
 *.png
+*.tar
+*.root
+TrackerTOFPlots/TrackerTof

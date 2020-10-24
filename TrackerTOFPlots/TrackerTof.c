@@ -33,8 +33,13 @@ TH2D* Tracks_vs_TOF = new TH2D("Tracks_vs_TOF", "TKU Tracks vs TOF01", 100, 10, 
 TH2D* TrackPoints_vs_TOF = new TH2D("TrackPoints_vs_TOF", "TKU Track Points vs TOF01", 100, 10, 40, 100, 0, 100);
 TH1D* tof01 = new TH1D("tof01","TOF01", 200, 10, 40);
 TH1D* tof01_cuts = new TH1D("tof01_cuts","TOF01 [ns]", 200, 10, 40);
+TH1D* TrackPoints_x = new TH1D("TrackPoints_x", "x [mm]", 100, -400, 400);
+TH1D* TrackPoints_y = new TH1D("TrackPoints_y", "y [mm]", 100, -400, 400);
+TH1D* TrackPoints_z = new TH1D("TrackPoints_z", "z [mm]", 100, 13000, 21000);
 
 TCanvas *c1 = new TCanvas("c1","Canvas",900,900);
+
+Int_t N_NAN;
 
 void process_run( std::string filename ) {
   
@@ -69,7 +74,7 @@ void process_run( std::string filename ) {
     nspill++;
     if (nspill>spills) break;
     std::cout << "\b\b\b\b\b" << nspill;
-    
+        
     revts = spill->GetReconEvents();
 
     // Loop over recon events in spill  
@@ -104,12 +109,25 @@ void process_run( std::string filename ) {
 
       // Loop over _tracks_ in each event
       //std::cout << scifi_tracks.size() << std::endl;
-      for (unsigned int k = 0; k < scifi_tracks.size(); ++k)
+      for (unsigned int k = 0; k < scifi_tracks.size(); ++k){
+	trackpoints = scifi_tracks[k]->scifitrackpoints();
 	if (scifi_tracks[k]->tracker()==0) {
-	  tku_tracks = tku_tracks +1;
-	  trackpoints = scifi_tracks[k]->scifitrackpoints();
+	  tku_tracks = tku_tracks +1;	
 	  tku_trackpoints = tku_trackpoints + trackpoints.size();
 	}
+	
+      
+	for (unsigned int l = 0; l < trackpoints.size(); ++l){
+	  TrackPoints_x->Fill(trackpoints[l]->pos().x());
+	  TrackPoints_y->Fill(trackpoints[l]->pos().y());
+	  TrackPoints_z->Fill(trackpoints[l]->pos().z());
+
+	  if ( TMath::IsNaN(trackpoints[l]->pos().z())){
+	    N_NAN++;
+	    std::cout << "NAN" << std::endl;
+	  }
+	}
+      }
       
       //std::cout << tku_tracks << std::endl;
       TOFsp_vs_Tracks->Fill(tku_tracks, tof_space_points.GetTOF0SpacePointArray().size());
@@ -126,9 +144,17 @@ void process_run( std::string filename ) {
 
 int main(){
   
-  process_run("~/tmp/3.3.2/07666_recon.root");
+  // One reconstructed run:
+  //process_run("~/tmp/3.3.2/07666_recon.root");
   //process_run("~/tmp/3.1.2/07666_recon.root");
+  //process_run("/home/phswbb/tmp/reco/07666_reco_TTR_fix.root");
+  //process_run("/home/phswbb/tmp/reco/07666_recon.root");
+  process_run("07675_recon.root");  // Test job with 3.3.3
 
+  std::cout << "Number of NAN: " << N_NAN << std::endl;
+
+
+  // Plots:
   TOFsp_vs_Tracks->GetXaxis()->SetTitle("TKU Tracks");
   TOFsp_vs_Tracks->GetYaxis()->SetTitle("TOF0 SP");
 
@@ -159,8 +185,18 @@ int main(){
   tof01_cuts->SetLineColor(kRed);
   tof01_cuts->Draw("sames");
   c1->SaveAs("TOF01.png");  
+
+  TrackPoints_x->Draw();
+  c1->SaveAs("TrackPoints_x.png");
+  TrackPoints_y->Draw();
+  c1->SaveAs("TrackPoints_y.png");
+  TrackPoints_z->Draw();
+  c1->SaveAs("TrackPoints_z.png");
+
   
   system("eog .");
+
+
 
 }
 

@@ -1,0 +1,4 @@
+
+source ~/maus/env.sh
+
+~/G4beamline-3.02/bin/g4bl MAY09-B1B2-positives-TOF0.in

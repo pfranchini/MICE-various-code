@@ -1,0 +1,56 @@
+
+param -unset proton_number=1E12
+param -unset proton_weight=1
+
+param -unset q_1=0.675
+param -unset q_2=-0.843
+param -unset q_3=0.586
+
+param -unset d_1=-0.823
+param -unset d_2=-0.396
+
+param -unset d_s=2.428
+
+param -unset q_4=0.908
+param -unset q_5=-1.218
+param -unset q_6=0.807
+
+param -unset q_7=0.797
+param -unset q_8=-1.205
+param -unset q_9=1.029
+
+param -unset protonabsorberin=1
+param -unset proton_absorber_thickness=83
+
+param -unset WRKDIR=$MAUS_ROOT_DIR/src/map/MapPyBeamlineSimulation/G4bl
+param -unset d_s=130
+param -unset particle_charge=3
+
+param random_seed=1
+
+*	MAY09-B1B2-positives.in   
+*
+*	B1 and B2 only.
+#
+#	Command-line parameter REQUIRED: P  (target meanMomentum)
+#	Command-line parameters (optional - default as follows):
+param -unset first=0 last=4000 viewer=none
+
+# piMomentumRef is the pion referenceKinCut momentum at target
+# muMomentumRef is the muon reference momentum at center of DecaySolenoid
+# if they are equal, no mu reference is generated, so pi is tuned to the end.
+param -unset Ppi=480 Pmu=238
+param piMomentumRef=$Ppi muMomentumRef=$Pmu 
+
+# B1Type, B2Type: 0=genericbend, 1=6" field map, 2=6"field map tapered
+#                 3=6"field map tapered, offset position (B1 only)
+param -unset B1Type=2 B2Type=2
+param -unset CollimatorHalfAperture=236
+param -unset DiffThick=3
+
+param -unset piplus=1 piminus=0 eplus=1 eminus=0 proton=1 gamma=1
+param -unset keep='' C='+'
+
+
+include MAY09-Stage0-TOF0.in
+
